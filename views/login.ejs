@@ -1,7 +1,51 @@
-<h1> Log in </h1>
+<%- include ./../partials/header.ejs %>
 
-<form action='/login' method='POST'>
-  <input type='text' name='username' placeholder='username'>
-  <input type='password' name='password' placeholder='password'>
-  <button>Login</button>
-</form>
+<style>
+  #mainContainer {
+    max-width: 480px;
+  }
+
+  label {
+    color: rgb(97, 107, 112);
+    display: block !important;
+    margin-bottom: 0.1em;
+  }
+
+  input {
+    background-color: rgb(244, 245, 246);
+    font-family: "Nunito Sans", sans-serif;
+  }
+
+  #loginForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    text-align: center;
+    position: relative;
+    top: 20%;
+    transform: translateY(30%);
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 4px 0px;
+    border-radius: 8px;
+    padding: 40px;
+  }
+</style>
+
+<div class='container' id="mainContainer">
+  <form id='loginForm' action='/login' method='POST'>
+    <h1>Sign In</h1>
+    <br>
+    <div spellcheck="false">
+      <label for="_id">Username</label>
+      <input id="_id" name="username" required="" type="text" data-test="_id" value="">
+    </div>
+    <br>
+    <div spellcheck="false">
+      <label for="_password">Password</label>
+      <input id="_password" name="password" placeholder="" required="" type="password">
+    </div>
+    <button type="submit" class='btn btn-primary' style="margin-top: 32px;">Log in</button>
+  </form>
+</div>

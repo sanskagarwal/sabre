@@ -90,7 +90,12 @@
 
     function updateArea(e) {
       var data = draw.getAll();
-      console.log(data.features[0].geometry);
+      console.log(data);
+      try {
+        console.log(data.features[0].geometry);
+      } catch(e) {
+        console.log('Geometry Deleted');
+      }
     }
 
         // Current Location
