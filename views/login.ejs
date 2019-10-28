@@ -2,13 +2,7 @@
 
 <style>
   #mainContainer {
-    max-width: 480px;
-  }
-
-  label {
-    color: rgb(97, 107, 112);
-    display: block !important;
-    margin-bottom: 0.1em;
+    max-width: 400px;
   }
 
   input {
@@ -17,12 +11,7 @@
   }
 
   #loginForm {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 0 50px;
-    text-align: center;
+    
     position: relative;
     top: 20%;
     transform: translateY(30%);
@@ -37,15 +26,14 @@
   <form id='loginForm' action='/login' method='POST'>
     <h1>Sign In</h1>
     <br>
-    <div spellcheck="false">
+    <div class='form-group' spellcheck="false">
       <label for="_id">Username</label>
-      <input id="_id" name="username" required="" type="text" data-test="_id" value="">
+      <input class="form-control" id="_id" name="username" required type="text" data-test="_id" value="">
     </div>
-    <br>
-    <div spellcheck="false">
+    <div class='form-group' spellcheck="false">
       <label for="_password">Password</label>
-      <input id="_password" name="password" placeholder="" required="" type="password">
+      <input class="form-control" id="_password" name="password" placeholder="" required type="password">
     </div>
-    <button type="submit" class='btn btn-primary' style="margin-top: 32px;">Log in</button>
+    <button type="submit" class='form-control btn btn-primary'>Log in</button>
   </form>
 </div>

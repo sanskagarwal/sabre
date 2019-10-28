@@ -34,4 +34,10 @@ router.get('/report', isLoggedIn, (req, res) => {
   res.render('report');
 });
 
+router.post('/findMember', (req, res) => {
+  console.log(req.body); // polygonCoords
+  console.log(req.user); // Current User
+  res.send({success: 200});
+});
+
 module.exports = router;
