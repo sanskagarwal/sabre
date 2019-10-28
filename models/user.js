@@ -21,9 +21,9 @@ const userSchema = new mongoose.Schema({
       type: Number,
       required: true
     },
-    contact :{
+    contact: {
       type: Number,
-      required : true
+      required: true
     },
     image: {
       type: String

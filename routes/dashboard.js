@@ -12,7 +12,6 @@ const storage = multer.diskStorage({
     cb(null, 'public/uploads')
   },
   filename: function (req, file, cb) {
-    console.log(req.user);
     cb(null, req.user._id + '-img' + req.user.family.length + path.extname(file.originalname));
   }
 });
@@ -24,8 +23,8 @@ router.post('/addFamily', isLoggedIn, upload.single('mypic'), async (req, res) =
     const memberData = {
       name: req.body.name,
       age: req.body.age,
-      image : 'uploads/'+req.file.filename,
-      contact:req.body.contactno
+      image: 'uploads/' + req.file.filename,
+      contact: req.body.contactno
     };
     const user = await User.findById(req.user._id);
     user.family.push(memberData);

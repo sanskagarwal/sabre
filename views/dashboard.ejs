@@ -5,19 +5,12 @@
     height: 50px;
     width: 50px;
   }
-
 </style>
 
 <div style='margin-top: 2%' class='container'>
   <h1>Family Details</h1>
-  <br><br>
-  <h2>Name of the family : <%= user.username %></h2>
-  <h2>Unique_id of the family : <%= user._id %></h2>
-   <br> <br>
-  <div class="container">
-  <h2>List of family members</h2>
   <br>
-  <br>     
+  <br>
   <table class="table table-bordered">
     <thead>
       <tr class="table-primary">
@@ -25,34 +18,21 @@
         <th>Name</th>
         <th>Age</th>
         <th>Contact No.</th>
-        <th> Image </th>
+        <th>Image </th>
       </tr>
     </thead>
     <tbody>
-      <ol style="type=1">
       <% user.family.forEach((member, ind) => { %>
-       
-       <tr>
-             <td><%= ind+1 %></td>
-            <td><%= member.name %></td>
-            <td><%= member.age %></td>
-            <td><%= member.contact %></td>
-            <td><img src='<%= member.image %>' alt="<%= member.name %> pic"></td>
-         
+      <tr>
+        <td><%= ind+1 %></td>
+        <td><%= member.name %></td>
+        <td><%= member.age %></td>
+        <td><%= member.contact %></td>
+        <td><img src='<%= member.image %>' alt="<%= member.name %> pic"></td>
       </tr>
-      
       <% }) %>
-      </ol>
     </tbody>
   </table>
-</div>
-
-
-  
- 
-   <div class="container">
-  
-
   <!-- Button to Open the Modal -->
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
     Add Family Member
@@ -62,52 +42,51 @@
   <div class="modal fade" id="myModal">
     <div class="modal-dialog">
       <div class="modal-content">
-      
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Fill the details</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        
+
         <!-- Modal body -->
         <div class="modal-body">
-         <form action="addFamily" method="POST" enctype="multipart/form-data">
-              <div class="form-group">
-              <input type="text"  name="name" class="form-control" aria-describedby="Help" placeholder="Enter name">
-              </div>
-             <div class="form-group">
-              <input type="number" name="age"  class="form-control"  placeholder="age">
-              </div>
-              <div class="form-group">
-              <input type="number" name="contactno"  class="form-control"  placeholder="Mobile number">
-              </div>
-              <div class="custom-file mb-3">
-             <input type="file" class="custom-file-input" id="customFile" name="mypic">
+          <form action="addFamily" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <input type="text" name="name" class="form-control" aria-describedby="Help" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+              <input type="number" name="age" class="form-control" placeholder="age">
+            </div>
+            <div class="form-group">
+              <input type="number" name="contactno" class="form-control" placeholder="Mobile number">
+            </div>
+            <div class="custom-file mb-3">
+              <input type="file" class="custom-file-input" id="customFile" name="mypic">
               <label class="custom-file-label" for="customFile">Choose file</label>
-             </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <button type="submit" class="form-control btn btn-primary">Submit</button>
           </form>
         </div>
-        
+
         <!-- Modal footer -->
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
-        
+
       </div>
     </div>
   </div>
-<br> <br>
-<script>
-// Add the following code if you want the name of the file appear on select
-$(".custom-file-input").on("change", function() {
-  var fileName = $(this).val().split("\\").pop();
-  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-});
-</script>
-</div>
-
+  <br>
   <a href='/search'>Search Page</a>
   <br>
   <a href='/report'>Report Page</a>
+
+  <script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+  </script>
 </div>
