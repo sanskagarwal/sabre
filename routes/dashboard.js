@@ -4,12 +4,28 @@ const User = require('../models/user');
 const CameraLocation = require('./../models/location');
 const isLoggedIn = require('../utils/isLoggedIn');
 const getCentroid = require('./../utils/getCentroid');
+const multer = require('multer');
+const path = require('path');
 
-router.post('/addFamily', isLoggedIn, async (req, res) => {
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads')
+  },
+  filename: function (req, file, cb) {
+    console.log(req.user);
+    cb(null, req.user._id + '-img' + req.user.family.length + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage })
+
+router.post('/addFamily', isLoggedIn, upload.single('mypic'), async (req, res) => {
   try {
     const memberData = {
       name: req.body.name,
-      age: req.body.age
+      age: req.body.age,
+      image : 'uploads/'+req.file.filename,
+      contact:req.body.contactno
     };
     const user = await User.findById(req.user._id);
     user.family.push(memberData);
