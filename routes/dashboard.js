@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require('../models/user');
 const CameraLocation = require('./../models/location');
+const Lost = require('./../models/lost');
 const isLoggedIn = require('../utils/isLoggedIn');
 const getCentroid = require('./../utils/getCentroid');
 const multer = require('multer');
@@ -16,7 +17,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage });
 
 router.post('/addFamily', isLoggedIn, upload.single('mypic'), async (req, res) => {
   try {
@@ -51,12 +52,28 @@ router.get('/report', isLoggedIn, (req, res) => {
   res.render('report');
 });
 
-router.post('/findMember', isLoggedIn, (req, res) => {
-  const { polygonCoords } = req.body;
+
+const storage2 = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/lostPersons')
+  },
+  filename: function (req, file, cb) {
+    cb(null, 'img' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload2 = multer({ storage: storage2 })
+
+router.post('/findMember', isLoggedIn, upload2.single('recentImg'), (req, res) => {
+  const memberId = req.body.memberId;
+  const lastSeen = req.body.lastSeen;
+  const polygonCoords = JSON.parse(req.body.polygonCoords);
   const centroidResult = getCentroid(polygonCoords.coordinates[0]);
   if (centroidResult.status !== 1) {
     return console.log("Some error");
   }
+
+  const member = req.user.family.filter(value => value._id == memberId);
   CameraLocation.find({
     location: {
       $geoWithin: {
@@ -68,9 +85,22 @@ router.post('/findMember', isLoggedIn, (req, res) => {
       console.log(err);
       return res.send({ sucess: 500, msg: "Server Error" });
     }
-    console.log(cams); // Location of Cameras
-    res.send({ success: 200 });
+    console.log(cams); // Location of Cameras (Send to Model)
   });
+
+  const lostMember = new Lost({
+    member: member[0],
+    lastSeen,
+    recentImg: req.file ? ('lostPersons/' + req.file.filename) : null
+  });
+
+  lostMember.save().then((val) => {
+    // Saved To DB
+  }).catch((err) => {
+    console.log(err);
+  })
+
+  res.send({ success: 200 });
 });
 
 module.exports = router;

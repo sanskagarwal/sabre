@@ -56,6 +56,14 @@
           <li class="nav-item">
             <a class="nav-link" href="/">Home</a>
           </li>
+          <% if(currentUser) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/search">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/report">Report</a>
+          </li>
+          <% } %>
         </ul>
 
         <ul class="nav navbar-nav ml-auto">

@@ -80,13 +80,17 @@
             <label for='selectMember'>Family Member</label>
             <select id='selectMember' class="form-control" name="familyMember">
               <% familyData.forEach((member) => { %>
-              <option value="<%= member.name %>"><%= member.name %></option>
+              <option data-support="<%= member._id %>" value="<%= member.name %>"><%= member.name %></option>
               <% }) %>
             </select>
           </div>
           <div class="form-group">
             <label for="lastSeen">Last Seen</label>
-            <input class='form-control' required id='lastSeen' type='number' name='lastSeen' placeholder='minutes'>
+            <input class='form-control' required id='lastSeen' type='number' name='lastSeen' placeholder='Minutes'>
+          </div>
+          <div class="custom-file mb-3">
+            <input type="file" class="custom-file-input" id="customFile" name="recentImg">
+            <label class="custom-file-label" for="customFile">Image(Optional)</label>
           </div>
           <button type='submit' class='form-control btn btn-primary'>Search</button>
         </form>
@@ -154,24 +158,37 @@
   <script>
     $("#searchForm").submit((e) => {
       e.preventDefault();
-      var data = draw.getAll();
+      const data = draw.getAll();
       console.log(data);
-      if(!data.features[0]) {
+      if (!data.features[0]) {
         alert("Draw a Polygon on the map");
         return false;
       }
+
+      const file = $('#customFile')[0].files[0];
+      const fd = new FormData();
+      fd.append('recentImg', file);
+      fd.append('polygonCoords', JSON.stringify(data.features[0].geometry));
+      fd.append('memberName', $("#selectMember").val());
+      fd.append('memberId', $("#selectMember").find('option:selected').data('support'));
+      fd.append('lastSeen', $("#lastSeen").val());
       $.ajax({
         type: "POST",
         url: "/findMember",
-        data: {
-          memberName: $("#selectMember").val(),
-          lastSeen: $("#lastSeen").val(),
-          polygonCoords: data.features[0].geometry 
-        },
-        success: function(res) {
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function (res) {
           console.log(res);
         }
       });
+    });
+  </script>
+
+  <script>
+    $(".custom-file-input").on("change", function () {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
   </script>
 </body>
