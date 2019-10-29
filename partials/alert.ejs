@@ -1,0 +1,23 @@
+<% if(messages.info && messages.info.length) { %>
+<% messages.info.forEach((msg) => { %>
+<div class="alert alert-info" role="alert">
+  <%= msg %>
+</div>
+<% }) %>
+<% } %>
+
+<% if(messages.error && messages.error.length) { %>
+<% messages.error.forEach((msg) => { %>
+<div class="alert alert-danger" role="alert">
+  <%= msg %>
+</div>
+<% }) %>
+<% } %>
+
+<% if(messages.success && messages.success.length) { %>
+<% messages.success.forEach((msg) => { %>
+<div class="alert alert-success" role="alert">
+  <%= msg %>
+</div>
+<% }) %>
+<% } %>

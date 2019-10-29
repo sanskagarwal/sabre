@@ -1,4 +1,4 @@
-<%- include ./../partials/header.ejs %>
+  <%- include ./../partials/header.ejs %>
 
 <style>
   img {
@@ -10,6 +10,7 @@
 <div style='margin-top: 2%' class='container'>
   <h1>Family Details</h1>
   <br>
+  <%- include ./../partials/alert.ejs %>
   <br>
   <table class="table table-bordered">
     <thead>
@@ -53,16 +54,16 @@
         <div class="modal-body">
           <form action="addFamily" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-              <input type="text" name="name" class="form-control" aria-describedby="Help" placeholder="Enter name">
+              <input required type="text" name="name" class="form-control" aria-describedby="Help" placeholder="Enter name">
             </div>
             <div class="form-group">
-              <input type="number" name="age" class="form-control" placeholder="age">
+              <input required type="number" name="age" class="form-control" placeholder="age">
             </div>
             <div class="form-group">
-              <input type="number" name="contactno" class="form-control" placeholder="Mobile number">
+              <input required type="number" name="contactno" class="form-control" placeholder="Mobile number">
             </div>
             <div class="custom-file mb-3">
-              <input type="file" class="custom-file-input" id="customFile" name="mypic">
+              <input required type="file" class="custom-file-input" id="customFile" name="mypic">
               <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
             <button type="submit" class="form-control btn btn-primary">Submit</button>
