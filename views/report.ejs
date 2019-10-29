@@ -27,10 +27,7 @@
       margin: 0;
       padding: 0;
     }
-    img{
-    	height: 100px;
-    	width: 100px;
-    }
+
     #map {
       height: 500px
     }
@@ -74,11 +71,30 @@
 
   <br>
   <br>
-
+  <center> <h1> Report a lost person</h1></center>
   <div class='container'>
     <div class='row'>
       <div class="col-md-3">
-        
+        <form id="searchForm">
+          <div class="form-group">
+            
+            
+          </div>
+          <div class="form-group">
+            <label for="Name">Name</label>
+            <input class='form-control' id='name' type='text' name='name' placeholder='Name(optional)'>
+          </div>
+          <div class="form-group">
+            <label for="Family Name">Family Name</label>
+            <input class='form-control' value=""id='familyname' type='text' name='familyname' placeholder='Family Name(optional)'>
+          </div>
+          <div class="custom-file mb-3">
+            <input type="file" required class="custom-file-input" id="customFile" name="recentImg">
+            <label class="custom-file-label" for="customFile">Image</label>
+          </div>
+         
+          <button type='submit' class='form-control btn btn-primary'>Search</button>
+        </form>
       </div>
       <div class="col-md-9">
         <div id='map'></div>
@@ -97,10 +113,6 @@
     });
     var draw = new MapboxDraw({
       displayControlsDefault: false,
-      controls: {
-        polygon: true,
-        trash: true
-      }
     });
     var geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
@@ -108,22 +120,63 @@
       countries: 'IN',
       limit: 10
     });
-
-   
-     map.addControl(new mapboxgl.NavigationControl());
-
-  
+    var geolocate = new mapboxgl.GeolocateControl({
+       positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    });
 
     // Current Location
-    // map.addControl(new mapboxgl.GeolocateControl({
-    //     positionOptions: {
-    //         enableHighAccuracy: true
-    //     },
-    //     trackUserLocation: true
-    // }));
+    map.addControl(geolocate);
+    geolocate.on('geolocate', function(e) {
+    	console.log(e.coords.latitude);
+    	map.flyTo({
+		    center:[e.coords.longitude, e.coords.latitude], 
+		    zoom:16 //set zoom 
+		 });
+	});
   </script>
 
- 
+  <script>
+    $("#searchForm").submit((e) => {
+      e.preventDefault();
+      const data = geolocate._lastKnownPosition;
+      //   console.log(data.Position);
+      if (!data) {
+        alert("Find your current location on the map");
+        return false;
+      }
+
+      const file = $('#customFile')[0].files[0];
+      const fd = new FormData();
+      fd.append('Image', file);
+      fd.append('Coords', JSON.stringify(data.Position));
+      fd.append('yourname', $("#name").val());
+      fd.append('familyname', $("#famiyname").val());
+     
+      $.ajax({
+        type: "POST",
+        url: "/report",
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function (res) {
+          console.log(res);
+        }
+      });
+
+      
+    });
+  </script>
+  <script>
+    $(".custom-file-input").on("change", function () {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+  </script>
+
+  
 </body>
 
 </html>
