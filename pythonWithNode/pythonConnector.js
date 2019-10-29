@@ -2,7 +2,7 @@ var zerorpc = require("zerorpc");
 const path = require('path');
 const { spawn } = require('child_process');
 
-const pythonConnector = spawn('python3', ['-u', path.join(__dirname, 'face_recog.py'), 'input.mp4', 'inputimg.png']);
+const pythonConnector = spawn('python3', ['-u', path.join(__dirname, 'face_recog.py'), 'input.mp4', 'ravindra.jpeg']);
 
 pythonConnector.stdout.on('data', (data) => {
   console.log(`stdout: ${data}`);

@@ -71,29 +71,40 @@
 
   <br>
   <br>
-  <center> <h1> Report a lost person</h1></center>
+  <center>
+    <h1> Report a lost person</h1>
+  </center>
   <div class='container'>
     <div class='row'>
       <div class="col-md-3">
         <form id="searchForm">
           <div class="form-group">
-            
-            
+
+
           </div>
           <div class="form-group">
             <label for="Name">Name</label>
-            <input class='form-control' id='name' type='text' name='name' placeholder='Name(optional)'>
+            <input class='form-control' id='name' type='text' name='name'>
           </div>
           <div class="form-group">
-            <label for="Family Name">Family Name</label>
-            <input class='form-control' value=""id='familyname' type='text' name='familyname' placeholder='Family Name(optional)'>
+            <label for="_email">Email</label>
+            <input required type="email" id="_email" name="email" class="form-control">
           </div>
+          <div class="form-group">
+            <label for="contactno">Contact Number</label>
+            <input required type="number" id="contactno" name="contactno" class="form-control">
+          </div>
+          <!-- <div class="form-group">
+            <label for="Family Name">Family Name</label>
+            <input class='form-control' value="" id='familyname' type='text' name='familyname'
+              placeholder='Family Name(optional)'>
+          </div> -->
           <div class="custom-file mb-3">
             <input type="file" required class="custom-file-input" id="customFile" name="recentImg">
-            <label class="custom-file-label" for="customFile">Image</label>
+            <label class="custom-file-label" for="customFile">Person Image</label>
           </div>
-         
-          <button type='submit' class='form-control btn btn-primary'>Search</button>
+
+          <button type='submit' class='form-control btn btn-primary'>Inform Family</button>
         </form>
       </div>
       <div class="col-md-9">
@@ -121,21 +132,21 @@
       limit: 10
     });
     var geolocate = new mapboxgl.GeolocateControl({
-       positionOptions: {
-            enableHighAccuracy: true
-        },
-        trackUserLocation: true
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true
     });
 
     // Current Location
     map.addControl(geolocate);
-    geolocate.on('geolocate', function(e) {
-    	console.log(e.coords.latitude);
-    	map.flyTo({
-		    center:[e.coords.longitude, e.coords.latitude], 
-		    zoom:16 //set zoom 
-		 });
-	});
+    geolocate.on('geolocate', function (e) {
+      console.log(e.coords.latitude);
+      map.flyTo({
+        center: [e.coords.longitude, e.coords.latitude],
+        zoom: 16 //set zoom 
+      });
+    });
   </script>
 
   <script>
@@ -150,11 +161,13 @@
 
       const file = $('#customFile')[0].files[0];
       const fd = new FormData();
-      fd.append('Image', file);
-      fd.append('Coords', JSON.stringify(data.Position));
-      fd.append('yourname', $("#name").val());
-      fd.append('familyname', $("#famiyname").val());
-     
+      fd.append('image', file);
+      fd.append('latitude', data.coords.latitude);
+      fd.append('longitude', data.coords.longitude);
+      fd.append('name', $("#name").val());
+      fd.append('email', $("#_email").val());
+      fd.append('contactno', $("#contactno").val());
+
       $.ajax({
         type: "POST",
         url: "/report",
@@ -166,7 +179,7 @@
         }
       });
 
-      
+
     });
   </script>
   <script>
@@ -176,7 +189,7 @@
     });
   </script>
 
-  
+
 </body>
 
 </html>

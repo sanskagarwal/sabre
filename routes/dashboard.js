@@ -1,12 +1,14 @@
 const express = require("express");
+const multer = require('multer');
+const path = require('path');
+const { exec } = require('child_process');
 const router = express.Router();
 const User = require('../models/user');
 const CameraLocation = require('./../models/location');
 const Lost = require('./../models/lost');
 const isLoggedIn = require('../utils/isLoggedIn');
 const getCentroid = require('./../utils/getCentroid');
-const multer = require('multer');
-const path = require('path');
+const sendEmail = require('./../utils/sendEmail');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -52,21 +54,6 @@ router.get('/report', isLoggedIn, (req, res) => {
   res.render('report');
 });
 
-// router.post('/report', isLoggedIn, async (req, res) => {
-//     let lostmembername="www";
-//   try {
-//     const user = await User.find({username: lostFamilyusernme});
-//     let len=user.family.length;
-//     for(let i=0;i<len;i++){
-//        if(lostmembername==user.family[i].name)
-//        res.render('report', { member: user.family[i] });
-//     }
-//   } catch (e) {
-//     console.log(e);
-//     res.redirect('/dashboard');
-//   }
-// });
-
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/lostPersons')
@@ -76,7 +63,35 @@ const storage2 = multer.diskStorage({
   }
 });
 
-const upload2 = multer({ storage: storage2 })
+const upload2 = multer({ storage: storage2 });
+
+router.post('/report', isLoggedIn, upload2.single('image'), async (req, res) => {
+  const { name, email, contactno, latitude, longitude } = req.body;
+  exec(`python3 -u pythonWithNode/compare_faces.py public/lostPersons/${req.file.filename}`, (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    const pythonOutput = stdout.split('\n');
+    if (pythonOutput[1] === 'Found') {
+      const imageName = pythonOutput[2];
+      const imageId = imageName.split('-')[0];
+      User.findById(imageId, (err, user) => {
+        if(err) {
+          return console.log(err);
+        }
+        if(!user) {
+          return console.log("User not found");
+        }
+        sendEmail(name, contactno, email, latitude, longitude, user.email);
+        // Send Email
+      });
+    } else {
+      console.log("Not found, Do nothing");
+    }
+    res.send({ status: 200 })
+  });
+});
 
 router.post('/findMember', isLoggedIn, upload2.single('recentImg'), async (req, res) => {
   try {
