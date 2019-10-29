@@ -52,7 +52,6 @@ router.get('/report', isLoggedIn, (req, res) => {
   res.render('report');
 });
 
-
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/lostPersons')
@@ -64,46 +63,38 @@ const storage2 = multer.diskStorage({
 
 const upload2 = multer({ storage: storage2 })
 
-router.post('/findMember', isLoggedIn, upload2.single('recentImg'), (req, res) => {
-  const memberId = req.body.memberId;
-  const lastSeen = req.body.lastSeen;
-  const polygonCoords = JSON.parse(req.body.polygonCoords);
-  const centroidResult = getCentroid(polygonCoords.coordinates[0]);
-  if (centroidResult.status !== 1) {
-    console.log("Some error");
-    req.flash('error', 'ServerError');
-    res.redirect('/dashboard');
-  }
+router.post('/findMember', isLoggedIn, upload2.single('recentImg'), async (req, res) => {
+  try {
+    const memberId = req.body.memberId;
+    const lastSeen = req.body.lastSeen;
+    const polygonCoords = JSON.parse(req.body.polygonCoords);
+    const centroidResult = getCentroid(polygonCoords.coordinates[0]);
+    if (centroidResult.status !== 1) {
+      throw 'Server Error';
+    }
 
-  const member = req.user.family.filter(value => value._id == memberId);
-  CameraLocation.find({
-    location: {
-      $geoWithin: {
-        $centerSphere: [[centroidResult.Cx, centroidResult.Cy], 200 / (6378.1 * 1000)] // 200 metres radius
+    const member = req.user.family.filter(value => value._id == memberId); // No Type Coercion Required
+    const cams = await CameraLocation.find({
+      location: {
+        $geoWithin: {
+          $centerSphere: [[centroidResult.Cx, centroidResult.Cy], 200 / (6378.1 * 1000)] // 200 metres radius
+        }
       }
-    }
-  }, (err, cams) => {
-    if (err) {
-      console.log(err);
-      return res.send({ sucess: 500, msg: "Server Error" });
-    }
+    });
     console.log(cams); // Location of Cameras (Send to Model)
-  });
 
-  const lostMember = new Lost({
-    member: member[0],
-    lastSeen,
-    recentImg: req.file ? ('lostPersons/' + req.file.filename) : null
-  });
-
-  lostMember.save().then((val) => {
-    // Saved To DB
-  }).catch((err) => {
-    req.flash('error', 'ServerError');
-    res.redirect('/dashboard');
-  })
-
-  res.send({ success: 200 });
+    const lostMember = new Lost({
+      member: member[0],
+      lastSeen,
+      recentImg: req.file ? ('lostPersons/' + req.file.filename) : null
+    });
+    await lostMember.save();
+    res.send({ success: 200 });
+  } catch (e) {
+    console.log(e);
+    req.flash('error', 'Server error');
+    res.redirect('/dashbaord');
+  }
 });
 
 module.exports = router;
