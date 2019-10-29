@@ -28,8 +28,15 @@ app.set("view engine", "ejs");
 app.use(require("express-session")({
   secret: "cat",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { maxAge: 4320000 }, // 12 Hrs
+  store: new MongoStore({
+    url: mongoDBURI,
+    autoReconnect: true,
+  })
 }));
+app.use(flash());
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));

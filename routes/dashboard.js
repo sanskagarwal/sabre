@@ -33,6 +33,7 @@ router.post('/addFamily', isLoggedIn, upload.single('mypic'), async (req, res) =
     res.redirect('/dashboard');
   } catch (e) {
     console.log(e);
+    req.flash('error', 'Server Error');
     res.redirect('/dashboard');
   }
 });
@@ -45,7 +46,6 @@ router.get('/search', isLoggedIn, async (req, res) => {
     console.log(e);
     res.redirect('/dashboard');
   }
-
 });
 
 router.get('/report', isLoggedIn, (req, res) => {
@@ -70,7 +70,9 @@ router.post('/findMember', isLoggedIn, upload2.single('recentImg'), (req, res) =
   const polygonCoords = JSON.parse(req.body.polygonCoords);
   const centroidResult = getCentroid(polygonCoords.coordinates[0]);
   if (centroidResult.status !== 1) {
-    return console.log("Some error");
+    console.log("Some error");
+    req.flash('error', 'ServerError');
+    res.redirect('/dashboard');
   }
 
   const member = req.user.family.filter(value => value._id == memberId);
@@ -97,7 +99,8 @@ router.post('/findMember', isLoggedIn, upload2.single('recentImg'), (req, res) =
   lostMember.save().then((val) => {
     // Saved To DB
   }).catch((err) => {
-    console.log(err);
+    req.flash('error', 'ServerError');
+    res.redirect('/dashboard');
   })
 
   res.send({ success: 200 });

@@ -11,7 +11,7 @@
   }
 
   #loginForm {
-    
+
     position: relative;
     top: 20%;
     transform: translateY(30%);
@@ -24,6 +24,7 @@
 
 <div class='container' id="mainContainer">
   <form id='loginForm' action='/login' method='POST'>
+    <%- include ./../partials/alert.ejs %>
     <h1>Sign In</h1>
     <br>
     <div class='form-group' spellcheck="false">

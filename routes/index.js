@@ -33,6 +33,7 @@ router.post('/register', function (req, res) {
   User.register(newUser, req.body.password, function (err, user) {
     if (err) {
       console.log(err);
+      req.flash('error', err.message);
       return res.redirect('/register');
     }
     passport.authenticate('local')(req, res, function () {
@@ -42,14 +43,21 @@ router.post('/register', function (req, res) {
 });
 
 router.post("/login", passport.authenticate("local", {
-  failureRedirect: "/login"
+  failureRedirect: "/login",
+  failureFlash: true
 }), function (req, res) {
   res.redirect('/dashboard');
 });
 
 router.get("/logout", function (req, res) {
   req.logout();
-  res.redirect('/');
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) console.log('Error : Failed to destroy the session during logout.', err);
+      req.user = null;
+      res.redirect('/');
+    });
+  }
 });
 
 module.exports = router;
