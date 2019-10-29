@@ -20,7 +20,7 @@ function work() {
         name: 'Hostel 5',
         location: {
           type: 'Point',
-          coordinates: [85.43429853280423, 23.420697282701866]
+          coordinates: [85.43416598840417, 23.42062800510034]
         },
         camNum: 1
       },
@@ -28,7 +28,7 @@ function work() {
         name: 'Hostel 10',
         location: {
           type: 'Point',
-          coordinates: [85.43489419991681, 23.419098495077662]
+          coordinates: [85.43483289629467, 23.41908418184066]
         },
         camNum: 2
       },
@@ -36,7 +36,7 @@ function work() {
         name: 'Hostel 13',
         location: {
           type: 'Point',
-          coordinates: [85.434626149716, 23.417731994613632]
+          coordinates: [85.43458848714886, 23.417783912316878]
         },
         camNum: 3
       },
@@ -44,7 +44,7 @@ function work() {
         name: 'Hostel 6',
         location: {
           type: 'Point',
-          coordinates: [85.43316205954909, 23.42273370247129]
+          coordinates: [85.43314857246986, 23.422780575212244]
         },
         camNum: 4
       },
@@ -52,7 +52,7 @@ function work() {
         name: 'GP Birla',
         location: {
           type: 'Point',
-          coordinates: [85.43897126003407, 23.422579937820842]
+          coordinates: [85.43898381485133, 23.422664551695092]
         },
         camNum: 5
       },
@@ -60,7 +60,7 @@ function work() {
         name: 'Sharma Dhaba',
         location: {
           type: 'Point',
-          coordinates: [85.43316205954909, 23.42273370247129]
+          coordinates: [85.4384836339334, 23.423359950983155]
         },
         camNum: 6
       },
@@ -68,15 +68,40 @@ function work() {
         name: 'Hostel 12',
         location: {
           type: 'Point',
-          coordinates: [85.4340419, 23.4180238]
+          coordinates: [85.43429468062538, 23.418894454396025]
         },
         camNum: 7
+      },
+      {
+        name: 'International Guest House',
+        location: {
+          type: 'Point',
+          coordinates: [85.43622232344035, 23.41671528553657]
+        },
+        camNum: 8
+      },
+      {
+        name: 'Inner Circle',
+        location: {
+          type: 'Point',
+          coordinates: [85.4390568452041, 23.41490331382151]
+        },
+        camNum: 9
+      },
+      {
+        name: 'PMC',
+        location: {
+          type: 'Point',
+          coordinates: [85.4404081824357, 23.415714818782078]
+        },
+        camNum: 10
       }
     ], (err, docs) => {
       if (err) {
         return console.log(err);
       }
       console.log("Inserted");
+      process.exit(0);
     });
   });
 }

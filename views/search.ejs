@@ -63,6 +63,10 @@
     navbar {
       box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 2px 0px, rgba(0, 0, 0, 0.05) 0px 4px 8px 0px;
     }
+
+    .mapboxgl-marker {
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -180,6 +184,16 @@
         contentType: false,
         success: function (res) {
           console.log(res);
+
+
+          // Flying
+          var popup = new mapboxgl.Popup({ offset: 25 })
+            .setText('Last Seen x minutes ago');
+          var marker = new mapboxgl.Marker()
+            .setLngLat([85.43316205954909, 23.42273370247129])
+            .setPopup(popup)
+            .addTo(map);
+          map.flyTo({ center: [85.43316205954909, 23.42273370247129], zoom: 17 });
         }
       });
     });
