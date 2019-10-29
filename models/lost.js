@@ -19,6 +19,9 @@ const lostPersonSchema = new mongoose.Schema({
       type: String
     }
   },
+  familyUsername: {
+    type: String
+  },
   lastSeen: {
     type: Number,
     required: true

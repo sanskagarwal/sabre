@@ -52,6 +52,21 @@ router.get('/report', isLoggedIn, (req, res) => {
   res.render('report');
 });
 
+// router.post('/report', isLoggedIn, async (req, res) => {
+//     let lostmembername="www";
+//   try {
+//     const user = await User.find({username: lostFamilyusernme});
+//     let len=user.family.length;
+//     for(let i=0;i<len;i++){
+//        if(lostmembername==user.family[i].name)
+//        res.render('report', { member: user.family[i] });
+//     }
+//   } catch (e) {
+//     console.log(e);
+//     res.redirect('/dashboard');
+//   }
+// });
+
 
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
