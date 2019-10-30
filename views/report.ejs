@@ -71,9 +71,7 @@
 
   <br>
   <br>
-  <center>
-    <h1> Report a lost person</h1>
-  </center>
+  
   <div class='container'>
     <div class='row'>
       <div class="col-md-3">
@@ -104,11 +102,17 @@
             <label class="custom-file-label" for="customFile">Person Image</label>
           </div>
 
-          <button type='submit' class='form-control btn btn-primary'>Inform Family</button>
+          <button id="reportBtn" type='submit' class='form-control btn btn-primary'>Inform Family</button>
         </form>
       </div>
       <div class="col-md-9">
         <div id='map'></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div style="text-align: center;" id="information" class="col-md-12">
+
       </div>
     </div>
   </div>
@@ -155,9 +159,11 @@
       const data = geolocate._lastKnownPosition;
       //   console.log(data.Position);
       if (!data) {
-        alert("Find your current location on the map");
+        alert("Mark your current location on the map");
         return false;
       }
+
+      $('#reportBtn').prop('disabled', true);
 
       const file = $('#customFile')[0].files[0];
       const fd = new FormData();
@@ -175,7 +181,45 @@
         processData: false,
         contentType: false,
         success: function (res) {
+          $('#reportBtn').prop('disabled', false);
           console.log(res);
+          if (!res.status || res.status !== 200) {
+            return alert("Server Error");
+          }
+
+          let familyContact = '';
+          res.familyContact.forEach((val, ind) => {
+            familyContact+=`
+              <tr>
+                <th scope="row">${ind+1}</th>
+                <td>${val.name}</td>
+                <td>${val.contact}</td>
+              </tr>`;
+          });
+
+          $("#information").append(`
+            <h1>Missing Person's Family Information</h1>
+
+            <h2>Email: ${res.userEmail}</h2>
+
+            <h2><strong>Contact Information</strong></h2>
+            
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Contact No</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${familyContact}
+              </tbody>
+             </table>
+          `);
+        },
+        fail: function (err) {
+          console.log(err);
         }
       });
 

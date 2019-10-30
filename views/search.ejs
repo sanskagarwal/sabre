@@ -186,14 +186,15 @@
           console.log(res);
 
 
-          // Flying
-          var popup = new mapboxgl.Popup({ offset: 25 })
-            .setText('Last Seen x minutes ago');
-          var marker = new mapboxgl.Marker()
-            .setLngLat([85.43316205954909, 23.42273370247129])
-            .setPopup(popup)
-            .addTo(map);
-          map.flyTo({ center: [85.43316205954909, 23.42273370247129], zoom: 17 });
+          res.cams.forEach((val) => {
+            var popup = new mapboxgl.Popup({ offset: 25 })
+              .setText(val.name);
+            var marker = new mapboxgl.Marker()
+              .setLngLat([val.location.coordinates[0], val.location.coordinates[1]])
+              .setPopup(popup)
+              .addTo(map);
+          });
+          map.flyTo({ center: [res.centroidResult.Cx, res.centroidResult.Cy], zoom: 17 });
         }
       });
     });

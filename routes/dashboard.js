@@ -9,6 +9,7 @@ const Lost = require('./../models/lost');
 const isLoggedIn = require('../utils/isLoggedIn');
 const getCentroid = require('./../utils/getCentroid');
 const sendEmail = require('./../utils/sendEmail');
+const sendEmailtoUser = require('./../utils/sendEmailToUser');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -77,19 +78,27 @@ router.post('/report', isLoggedIn, upload2.single('image'), async (req, res) => 
       const imageName = pythonOutput[2];
       const imageId = imageName.split('-')[0];
       User.findById(imageId, (err, user) => {
-        if(err) {
+        if (err) {
           return console.log(err);
         }
-        if(!user) {
+        if (!user) {
           return console.log("User not found");
         }
         sendEmail(name, contactno, email, latitude, longitude, user.email);
         // Send Email
+        const familyContact = [];
+        user.family.forEach((val) => {
+          familyContact.push({ name: val.name, contact: val.contact });
+        });
+
+        sendEmailtoUser(email, user.email, familyContact);
+
+        res.send({ status: 200, userEmail: user.email, familyContact });
       });
     } else {
       console.log("Not found, Do nothing");
+      res.send({ status: 500 });
     }
-    res.send({ status: 200 })
   });
 });
 
@@ -119,7 +128,7 @@ router.post('/findMember', isLoggedIn, upload2.single('recentImg'), async (req, 
       recentImg: req.file ? ('lostPersons/' + req.file.filename) : null
     });
     await lostMember.save();
-    res.send({ success: 200 });
+    res.send({ success: 200, cams, centroidResult });
   } catch (e) {
     console.log(e);
     req.flash('error', 'Server error');

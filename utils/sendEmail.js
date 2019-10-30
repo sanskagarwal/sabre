@@ -19,12 +19,12 @@ const sendEmail = (name, contactno, recieverEmail, latitue, longitude, email) =>
     subject: "Missing Child Information", // Subject line
     html: `
         <p>Hey there</p>
-
         <p>${name}</p>
         <p>${contactno}</p>
         <p>${recieverEmail}</p>
         <p>Longitue: ${longitude}</p>
         <p>Latitude: ${latitue}</p>
+        <a href='' />
       `
   };
   transport.sendMail(message, function (err, info) {

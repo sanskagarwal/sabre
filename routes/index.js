@@ -60,4 +60,6 @@ router.get("/logout", function (req, res) {
   }
 });
 
+// router.get('/map', )
+
 module.exports = router;
