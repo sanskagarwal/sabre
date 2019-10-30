@@ -60,8 +60,9 @@ router.get("/logout", function (req, res) {
   }
 });
 
- router.get('/map', function(req,res){
-     res.render('map');
- });
+router.get('/map', (req, res) => {
+  const { lat, long, contact, name, email } = req.query;
+  res.render('map', { lat, long, contact, name, email });
+});
 
 module.exports = router;

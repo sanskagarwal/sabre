@@ -7,11 +7,11 @@ input_video = cv2.VideoCapture(sys.argv[1])
 length = int(input_video.get(cv2.CAP_PROP_FRAME_COUNT))
 
 # Load some sample pictures and learn how to recognize them.
-female_image = face_recognition.load_image_file(sys.argv[2])
-female_face_encoding = face_recognition.face_encodings(female_image)[0]
+curr_image = face_recognition.load_image_file(sys.argv[2])
+curr_face_encoding = face_recognition.face_encodings(curr_image)[0]
 
 known_faces = [
-    female_face_encoding
+    curr_face_encoding
 ]
 
 # Initialize some variables

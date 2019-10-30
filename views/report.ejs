@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Sabre</title>
+  <title>AICS</title>
 
 
   <script src='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
@@ -71,7 +71,7 @@
 
   <br>
   <br>
-  
+
   <div class='container'>
     <div class='row'>
       <div class="col-md-3">
@@ -102,7 +102,8 @@
             <label class="custom-file-label" for="customFile">Person Image</label>
           </div>
 
-          <button style="margin-bottom: 50px" id="reportBtn" type='submit' class='form-control btn btn-primary'>Inform Family</button>
+          <button style="margin-bottom: 50px" id="reportBtn" type='submit' class='form-control btn btn-primary'>Inform
+            Family</button>
         </form>
       </div>
 
@@ -188,35 +189,16 @@
             return alert("Server Error");
           }
 
-          let familyContact = '';
-          res.familyContact.forEach((val, ind) => {
-            familyContact+=`
-              <tr>
-                <th scope="row">${ind+1}</th>
-                <td>${val.name}</td>
-                <td>${val.contact}</td>
-              </tr>`;
-          });
+          if (!res.found) {
+            $("#information").append(`
+              <p>Unable to find the family of missing Person :(.</p>
+            `);
+            return;
+          }
 
           $("#information").append(`
-            <h1>Missing Person's Family Information</h1>
-
-            <h2>Email: ${res.userEmail}</h2>
-
-            <h2><strong>Contact Information</strong></h2>
-            
-            <table class="table">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Contact No</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${familyContact}
-              </tbody>
-             </table>
+            <h1>Found Child Family</h1>
+            <p>The family of the child has been notified with your personal information. Report to nearest police information for support.</p>
           `);
         },
         fail: function (err) {

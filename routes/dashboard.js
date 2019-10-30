@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require('multer');
 const path = require('path');
 const { exec } = require('child_process');
+const { URL } = require('url');
 const router = express.Router();
 const User = require('../models/user');
 const CameraLocation = require('./../models/location');
@@ -51,7 +52,7 @@ router.get('/search', isLoggedIn, async (req, res) => {
   }
 });
 
-router.get('/report', isLoggedIn, (req, res) => {
+router.get('/report', (req, res) => {
   res.render('report');
 });
 
@@ -66,12 +67,12 @@ const storage2 = multer.diskStorage({
 
 const upload2 = multer({ storage: storage2 });
 
-router.post('/report', isLoggedIn, upload2.single('image'), async (req, res) => {
+router.post('/report', upload2.single('image'), async (req, res) => {
   const { name, email, contactno, latitude, longitude } = req.body;
   exec(`python3 -u pythonWithNode/compare_faces.py public/lostPersons/${req.file.filename}`, (err, stdout, stderr) => {
     if (err) {
       console.error(err);
-      return;
+      return res.send({ status: 500 });;
     }
     const pythonOutput = stdout.split('\n');
     if (pythonOutput[1] === 'Found') {
@@ -79,25 +80,27 @@ router.post('/report', isLoggedIn, upload2.single('image'), async (req, res) => 
       const imageId = imageName.split('-')[0];
       User.findById(imageId, (err, user) => {
         if (err) {
-          return console.log(err);
+          console.log(err);
+          return res.send({ status: 500 });
         }
         if (!user) {
-          return console.log("User not found");
+          console.log("User not found");
+          return res.send({ status: 200, found: 0 });
         }
-        sendEmail(name, contactno, email, latitude, longitude, user.email);
-        // Send Email
-        const familyContact = [];
-        user.family.forEach((val) => {
-          familyContact.push({ name: val.name, contact: val.contact });
-        });
+        res.send({ status: 200, found: 1 });
 
-        sendEmailtoUser(email, user.email, familyContact);
-
-        res.send({ status: 200, userEmail: user.email, familyContact });
+        const url = new URL('http://localhost:3000/map');
+        url.searchParams.append('lat', latitude);
+        url.searchParams.append('long', longitude);
+        url.searchParams.append('name', name);
+        url.searchParams.append('email', email);
+        url.searchParams.append('contact', contactno);
+        sendEmail(name, contactno, email, latitude, longitude, user.email, url.href);
+        sendEmailtoUser(email);
       });
     } else {
       console.log("Not found, Do nothing");
-      res.send({ status: 500 });
+      res.send({ status: 200, found: 0 });
     }
   });
 });

@@ -29,7 +29,7 @@ MongoDB (optional, add cloud url to mongoDBURI variable in app.js)
 
 ### Installing
 
-A step by step series to get a development env running. Note: Will not work on windows.
+A step by step series to get a development env running. Note: It will not work on windows.
 
 1. Install NPM packages
 

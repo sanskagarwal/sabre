@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Sabre</title>
+  <title>AICS</title>
 
 
   <script src='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
@@ -29,7 +29,7 @@
     }
 
     #map {
-      height: 100%;
+      height: 90%;
       width: 100%;
     }
   </style>
@@ -69,21 +69,24 @@
 
 <body>
   <%- include ./../partials/navbar.ejs %>
-  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js'></script>
-  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css' type='text/css' />
+  <script
+    src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js'></script>
+  <link rel='stylesheet'
+    href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css'
+    type='text/css' />
   <div id='map'></div>
 
   <br>
   <br>
-  
+
   <div class='container'>
     <div class='row'>
-        <div class="col-md-9">
+      <div class="col-md-9">
         <div id='map'></div>
-        </div>
+      </div>
     </div>
 
-    
+
   </div>
 
 
@@ -111,31 +114,34 @@
       trackUserLocation: true
     });
     // directions
-    let directions=new MapboxDirections({
-       accessToken: mapboxgl.accessToken
+    let directions = new MapboxDirections({
+      accessToken: mapboxgl.accessToken
     });
-    
-    
+
+
     // Current Location
     map.addControl(geolocate);
     map.addControl(directions);
-    map.on('load', function() {
-        directions.setDestination([85.824539,20.296059]);
-        var lat,long;
-        navigator.geolocation.getCurrentPosition(function(position) {
-    		lat = position.coords.latitude;
-    		long = position.coords.longitude;
-    		directions.setOrigin([long,lat]);
-    		map.flyTo({ center: [long,lat], zoom: 14 });
-    	});
-    	
-
+    map.on('load', function () {
+      directions.setDestination([<%= long %>, <%= lat %>]);
+      var lat, long;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+        directions.setOrigin([long, lat]);
+        map.flyTo({ center: [long, lat], zoom: 15 });
+      });
     });
-    var popup = new mapboxgl.Popup({closeOnClick: false})
-     .setLngLat([85.824539,20.296059])
-     .setHTML('<h6>Lost Person!</h6>')
-     .addTo(map);
- 
+    var popup = new mapboxgl.Popup({ closeOnClick: false })
+      .setLngLat([<%= long %>, <%= lat %>])
+      .setHTML(`
+        <h6>Information</h6>
+        <p>Name: <%= name %></p>
+        <p>Email: <%= email %></p>
+        <p>Contact No: <%= contact %></p>
+      `)
+      .addTo(map);
+
   </script>
 
   <script>
@@ -147,13 +153,8 @@
         alert("Mark your current location on the map");
         return false;
       }
-     
-
-  });
-
-      
+    });
   </script>
-  
 
 </body>
 
