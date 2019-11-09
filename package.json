@@ -23,10 +23,6 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
     "path": "^0.12.7",
-    "validator": "^11.1.0",
-    "zerorpc": "^0.9.8"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.4"
+    "validator": "^11.1.0"
   }
 }

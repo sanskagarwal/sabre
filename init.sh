@@ -1,3 +1,5 @@
+#!/bin/sh
+
 mkdir public/uploads
 mkdir public/lostPersons
 touch config.js

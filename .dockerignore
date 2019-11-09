@@ -1,0 +1,24 @@
+# NodeJS
+node_modules
+
+# Data
+dlib
+data
+test
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Git
+.git
+.gitignore
+
+# Files
+pythonWithNode/inputFiles
+public/uploads/*
+public/lostPersons/*
+
+# Editor
+.vscode

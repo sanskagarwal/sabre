@@ -11,11 +11,10 @@ const User = require('./models/user');
 const indexRoutes = require('./routes/index');
 const dashboardRoutes = require('./routes/dashboard');
 
-const mongoDBURI = "mongodb://localhost:27017/sabre";
+const mongoDBURI = process.env.DBURL || "mongodb://localhost:27017/sabre";
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
-mongoose.set('useUnifiedTopology', true);
 mongoose.connect(mongoDBURI, () => {
   console.log("connected to DB");
 });

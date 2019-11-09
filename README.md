@@ -66,6 +66,31 @@ or, if nodemon is installed
 npm run dev
 ```
 
+## Running on Docker
+These instructions will help in running an instance of project on a docker container.
+
+
+1. Clone the Repo and run the init script to create necessary folders.
+
+```sh
+bash init.sh
+```
+
+2. Add email username and password in `config.js` for a gmail account and enable "Less secure app access" for this gmail account. It is used by nodemailer for sending emails. [Link](https://myaccount.google.com/security)
+
+```
+Username: myGmailAccount@gmail.com
+Password: myGmailAccountPassword
+```
+
+3. Run the following command to run the App on PORT 3000. Make sure the following ports are available:
+ - 3000 (For Web Server)
+ - 27017 (For MongoDB Instance)
+
+```sh
+docker-compose up --build
+```
+
 ## Built With
 
 * [Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/) - Maps and location

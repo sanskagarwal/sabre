@@ -14,7 +14,7 @@ const sendEmail = (name, contactno, recieverEmail, latitude, longitude, email, u
   });
 
   const message = {
-    from: "AItoKeepChildrenSafe@gmail.com",
+    from: config.email,
     to: email,
     subject: "Missing Child Information", // Subject line
     html: `

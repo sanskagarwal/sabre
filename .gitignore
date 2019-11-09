@@ -1,8 +1,19 @@
+# NodeJS
 node_modules/
 package-lock.json
+
+# Config
 config.js
+
+# Files
 public/uploads
 public/lostPersons
-dlib/
 pythonWithNode/inputFiles
+
+# Data
+dlib/
 test/
+data/
+
+# Editor
+.vscode
