@@ -98,7 +98,7 @@
               placeholder='Family Name(optional)'>
           </div> -->
           <div class="custom-file mb-3">
-            <input type="file" required class="custom-file-input" id="customFile" name="recentImg">
+            <input type="file" required class="custom-file-input" id="customFile" name="recentImg" accept="image/*">
             <label class="custom-file-label" for="customFile">Person Image</label>
           </div>
 
@@ -191,7 +191,7 @@
 
           if (!res.found) {
             $("#information").append(`
-              <p>Unable to find the family of missing Person :(.</p>
+              <p>${res.msg}</p>
             `);
             return;
           }

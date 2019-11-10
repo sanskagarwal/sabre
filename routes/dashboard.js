@@ -69,40 +69,45 @@ const upload2 = multer({ storage: storage2 });
 
 router.post('/report', upload2.single('image'), async (req, res) => {
   const { name, email, contactno, latitude, longitude } = req.body;
-  exec(`python3 -u pythonWithNode/compare_faces.py public/lostPersons/${req.file.filename}`, (err, stdout, stderr) => {
-    if (err) {
-      console.error(err);
-      return res.send({ status: 500 });;
-    }
-    const pythonOutput = stdout.split('\n');
-    if (pythonOutput[1] === 'Found') {
-      const imageName = pythonOutput[2];
-      const imageId = imageName.split('-')[0];
-      User.findById(imageId, (err, user) => {
-        if (err) {
-          console.log(err);
-          return res.send({ status: 500 });
-        }
-        if (!user) {
-          console.log("User not found");
-          return res.send({ status: 200, found: 0 });
-        }
-        res.send({ status: 200, found: 1 });
+  try {
+    exec(`python3 -u pythonWithNode/compare_faces.py public/lostPersons/${req.file.filename}`, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        return res.send({ status: 500 });;
+      }
+      const pythonOutput = stdout.split('\n');
+      if (Number(pythonOutput[1]) === 1) {
+        const imageName = pythonOutput[2];
+        const imageId = imageName.split('-')[0];
+        User.findById(imageId, (err, user) => {
+          if (err) {
+            console.log(err);
+            return res.send({ status: 500 });
+          }
+          if (!user) {
+            console.log("User not found");
+            return res.send({ status: 200, found: 0, msg: "Unable to find the user" });
+          }
+          res.send({ status: 200, found: 1 });
 
-        const url = new URL('http://localhost:3000/map');
-        url.searchParams.append('lat', latitude);
-        url.searchParams.append('long', longitude);
-        url.searchParams.append('name', name);
-        url.searchParams.append('email', email);
-        url.searchParams.append('contact', contactno);
-        sendEmail(name, contactno, email, latitude, longitude, user.email, url.href);
-        sendEmailtoUser(email);
-      });
-    } else {
-      console.log("Not found, Do nothing");
-      res.send({ status: 200, found: 0 });
-    }
-  });
+          const url = new URL('http://localhost:3000/map');
+          url.searchParams.append('lat', latitude);
+          url.searchParams.append('long', longitude);
+          url.searchParams.append('name', name);
+          url.searchParams.append('email', email);
+          url.searchParams.append('contact', contactno);
+          sendEmail(name, contactno, email, latitude, longitude, user.email, url.href);
+          sendEmailtoUser(email);
+        });
+      } else {
+        console.log("Not found, Do nothing");
+        res.send({ status: 200, found: 0, msg: pythonOutput[2] });
+      }
+    });
+  } catch (e) {
+    console.log(e);
+    res.send({ status: 500 });
+  }
 });
 
 router.post('/findMember', isLoggedIn, upload2.single('recentImg'), async (req, res) => {

@@ -88,7 +88,7 @@ Password: myGmailAccountPassword
  - 27017 (For MongoDB Instance)
 
 ```sh
-docker-compose up --build
+sudo docker-compose up --build
 ```
 
 ## Built With
