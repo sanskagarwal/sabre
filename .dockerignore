@@ -5,11 +5,13 @@ node_modules
 dlib
 data
 test
+dbData
 
 # Docker
 Dockerfile
 .dockerignore
 docker-compose.yml
+docker-compose.dev.yml
 
 # Git
 .git

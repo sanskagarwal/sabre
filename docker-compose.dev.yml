@@ -1,7 +1,7 @@
 version: "3"
 services:
   app:
-    image: skbro/aics
+    build: .
     ports:
       - "3000:3000"
     restart: always
@@ -13,6 +13,6 @@ services:
     image: mongo
     restart: always
     volumes:
-      - ./dbData:/data/db
+      - ./data:/data/db
     ports:
       - "27017:27017"

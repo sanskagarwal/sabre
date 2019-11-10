@@ -69,6 +69,16 @@ npm run dev
 ## Running on Docker
 These instructions will help in running an instance of project on a docker container.
 
+### Prod Environment
+1. Run the following command to run the App on PORT 3000. Make sure the following ports are available:
+ - 3000 (For Web Server)
+ - 27017 (For MongoDB Instance)
+
+```sh
+sudo docker-compose up --build
+```
+
+### Dev Environment
 
 1. Clone the Repo and run the init script to create necessary folders.
 
@@ -88,7 +98,7 @@ Password: myGmailAccountPassword
  - 27017 (For MongoDB Instance)
 
 ```sh
-sudo docker-compose up --build
+sudo docker-compose -f docker-compose.dev.yml up --build
 ```
 
 ## Built With

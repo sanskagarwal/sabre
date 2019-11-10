@@ -14,6 +14,7 @@ pythonWithNode/inputFiles
 dlib/
 test/
 data/
+dbData/
 
 # Editor
 .vscode
